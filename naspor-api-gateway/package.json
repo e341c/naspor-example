@@ -1,0 +1,34 @@
+{
+  "name": "naspor-api-gateway",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/e341c/naspor-api-gateway.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/e341c/naspor-api-gateway/issues"
+  },
+  "homepage": "https://gitlab.com/e341c/naspor-api-gateway#readme",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "http": "^0.0.1-security",
+    "http-proxy-middleware": "^2.0.6",
+    "koa": "^2.15.0",
+    "koa-bodyparser": "^4.4.1",
+    "koa-http-proxy-server": "^1.0.2",
+    "koa-morgan": "^1.0.1",
+    "koa-proxies": "^0.12.4",
+    "koa-router": "^12.0.1",
+    "koa-static": "^5.0.0",
+    "nodemon": "^3.0.3",
+    "ws": "^8.16.0"
+  }
+}

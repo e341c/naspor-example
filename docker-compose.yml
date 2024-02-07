@@ -1,0 +1,100 @@
+version: "3"
+services:
+    postgres:
+        build:
+            context: .
+            dockerfile: ./postgres/Dockerfile
+        restart: always
+        ports:
+            - ${POSTGRES_PORT}
+        environment:
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        command: ["-c", "shared_preload_libraries=pg_cron"]
+        networks:
+            - internal-network
+
+    # nginx:
+    #     build: ./nginx
+    #     ports:
+    #         - 80:80
+    #     networks:
+    #         - internal-network
+
+    rabbitmq:
+        image: rabbitmq:3.10-rc-management-alpine
+        ports:
+            # AMQP protocol port
+            - "5672:5672"
+            # HTTP management UI
+            - "15672:15672"
+        networks:
+            - api-network
+            - internal-network
+
+    naspor-api-gateway:
+        build:
+            context: ./naspor-api-gateway
+        restart: always
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./naspor-api-gateway:/usr/src/app
+        depends_on:
+            - postgres
+            - rabbitmq
+        networks:
+            - internal-network
+            - api-network
+
+    naspor-users:
+        build:
+            context: ./naspor-users
+        restart: always
+        # ports:
+        #     - "3001"
+        volumes:
+            - ./naspor-users:/usr/src/app
+        depends_on:
+            - postgres
+            - rabbitmq
+            - naspor-api-gateway
+        networks:
+            - internal-network
+
+    naspor-chats:
+        build:
+            context: ./naspor-chats
+        restart: always
+        # ports:
+        #     - "3002"
+        volumes:
+            - ./naspor-chats:/usr/src/app
+        depends_on:
+            - postgres
+            - rabbitmq
+            - naspor-api-gateway
+        networks:
+            - internal-network
+
+    naspor-arguments:
+        build:
+            context: ./naspor-arguments
+        restart: always
+        # ports:
+        #     - "3003"
+        volumes:
+            - ./naspor-arguments:/usr/src/app
+        depends_on:
+            - postgres
+            - rabbitmq
+            - naspor-api-gateway
+        networks:
+            - internal-network
+
+networks:
+    api-network:
+        driver: bridge
+    internal-network:
+        driver: bridge
+        internal: true
